@@ -1,0 +1,6 @@
+chrisapp
+pudb
+numpy
+scikit-image
+matplotlib
+SimpleITK
