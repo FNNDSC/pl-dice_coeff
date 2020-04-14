@@ -180,8 +180,8 @@ class Dice_coeff(ChrisApp):
         y=np.ndarray(img_len,dtype='float32')
 
         for i in range(252):
-            pred_files=os.listdir(pred_dir)
-            gt_files=os.listdir(ground_truth_dir)
+            pred_files=sorted(os.listdir(pred_dir))
+            gt_files=sorted(os.listdir(ground_truth_dir))
             img_X=imread(ground_truth_dir+gt_files[i],as_gray=True)
             img_y=imread(pred_dir+pred_files[i],as_gray=True)
             x[i]=i
