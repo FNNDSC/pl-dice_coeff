@@ -145,13 +145,20 @@ class Dice_coeff(ChrisApp):
         print(Gstr_title)
         print('Version: %s' % self.get_version())
 
+        print("-------------PLOTTING GRAPH----------------")
+        self.plot_accuracy(options)
+        print("-------------GRAPH SAVED ------------------")
+
+
     def show_man_page(self):
         """
         Print the app's man page.
         """
-        print(Gstr_synopsis)
+        print("-------------PLOTTING GRAPH----------------")
+        plot_accuracy(options)
+        print("-------------GRAPH SAVED ------------------")
    
-    def dice_coeff(ground_truth,pred):
+    def dice_coeff(self,ground_truth,pred):
         pred=pred.astype('float32')
         ground_truth=ground_truth.astype('float32')
         labelPred=sitk.GetImageFromArray(pred, isVector=False)
@@ -165,23 +172,24 @@ class Dice_coeff(ChrisApp):
         else:
             return result
 
-    def plot_accuracy(options):
+    def plot_accuracy(self,options):
         pred_dir=options.outputdir+'/'
         ground_truth_dir=options.inputdir+'/'
         img_len=len(os.listdir(pred_dir))
         x=np.ndarray(img_len,dtype='float32')
         y=np.ndarray(img_len,dtype='float32')
 
-        for i in range(img_len):
+        for i in range(252):
             pred_files=os.listdir(pred_dir)
             gt_files=os.listdir(ground_truth_dir)
             img_X=imread(ground_truth_dir+gt_files[i],as_gray=True)
             img_y=imread(pred_dir+pred_files[i],as_gray=True)
             x[i]=i
-            y[i]=dice_coeff(img_X,img_y)
+            y[i]=self.dice_coeff(img_X,img_y)
   
         plt.plot(x,y)
         plt.show
+        plt.savefig(pred_dir+'accuracy_graph.png')
         
 
 
