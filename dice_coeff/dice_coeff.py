@@ -16,6 +16,8 @@ import numpy as np
 from skimage.io import imread
 import SimpleITK as sitk
 import math
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(__file__))
@@ -176,20 +178,40 @@ class Dice_coeff(ChrisApp):
         pred_dir=options.outputdir+'/'
         ground_truth_dir=options.inputdir+'/'
         img_len=len(os.listdir(pred_dir))
-        x=np.ndarray(img_len,dtype='float32')
-        y=np.ndarray(img_len,dtype='float32')
+        x=np.zeros(img_len,dtype='float32')
+        y=np.zeros(img_len,dtype='float32')
+        nz_counter=0
+        total=0.0
+        avg_accuracy=0.0
 
         for i in range(252):
             pred_files=sorted(os.listdir(pred_dir))
+            for pf in pred_files:
+                if not pf.endswith('.png'):
+                    pred_files.remove(pf)
             gt_files=sorted(os.listdir(ground_truth_dir))
+            for gtf in gt_files:
+                if not gtf.endswith('.png'):
+                    gt_files.remove(gtf)
             img_X=imread(ground_truth_dir+gt_files[i],as_gray=True)
             img_y=imread(pred_dir+pred_files[i],as_gray=True)
             x[i]=i
             y[i]=self.dice_coeff(img_X,img_y)
-  
-        plt.plot(x,y)
-        plt.show
-        plt.savefig(pred_dir+'accuracy_graph.png')
+            # calculate non zero avg
+            if y[i]!=0.0:
+                total=total+y[i]
+                nz_counter=nz_counter+1
+        fig= plt.figure()
+        plt.title('Accuracy of the U-net model on all slices')
+        plt.plot(x,y,'g--')
+        plt.xlabel('no. of image slices')
+        plt.ylabel('Dice Coefficient')
+        plt.grid(True)
+    
+    
+        avg=total/nz_counter
+        print ("Average accuracy :" + str(avg) )
+        fig.savefig(pred_dir+"/output.png")
         
 
 
