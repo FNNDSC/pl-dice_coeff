@@ -35,11 +35,6 @@ http://patorjk.com/software/taag/#p=display&f=Doom&t=dice_coeff
 
 Gstr_synopsis = """
 
-(Edit this in-line help for app specifics. At a minimum, the 
-flags below are supported -- in the case of DS apps, both
-positional arguments <inputDir> and <outputDir>; for FS apps
-only <outputDir> -- and similarly for <in> <out> directories
-where necessary.)
 
     NAME
 
@@ -55,15 +50,17 @@ where necessary.)
             [--savejson <DIR>]                                          \\
             [-v <level>] [--verbosity <level>]                          \\
             [--version]                                                 \\
+	    [--prediction <predictions dir>]                            \\
+            [--ground_truth <ground truth dir>]                         \\
             <inputDir>                                                  \\
-            <outputDir> 
+            <outputDir>                                                  
 
     BRIEF EXAMPLE
 
         * Bare bones execution
 
             mkdir in out && chmod 777 out
-            python dice_coeff.py   \\
+            python dice_coeff.py --prediction pred --ground_truth gt   \\
                                 in    out
 
     DESCRIPTION
@@ -92,6 +89,12 @@ where necessary.)
         
         [--version]
         If specified, print version number and exit. 
+
+        [--prediction <predictions directory>]
+        Required : The name of the folder where predictions are stored.
+
+        [--ground_truth <ground truth directory>]
+        Required : The name of the directory where ground truth are stored.
 
 """
 
@@ -139,6 +142,10 @@ class Dice_coeff(ChrisApp):
         Define the CLI arguments accepted by this plugin app.
         Use self.add_argument to specify a new app argument.
         """
+        self.add_argument('--prediction',dest='pred',type=str,optional=False,
+                          help='Prediction directory name')
+        self.add_argument('--ground_truth',dest='gt',type=str,optional=False,
+                          help='Ground truth directory name')
 
     def run(self, options):
         """
@@ -156,9 +163,7 @@ class Dice_coeff(ChrisApp):
         """
         Print the app's man page.
         """
-        print("-------------PLOTTING GRAPH----------------")
-        plot_accuracy(options)
-        print("-------------GRAPH SAVED ------------------")
+        print(Gstr_synopsis)
    
     def dice_coeff(self,ground_truth,pred):
         pred=pred.astype('float32')
@@ -175,8 +180,8 @@ class Dice_coeff(ChrisApp):
             return result
 
     def plot_accuracy(self,options):
-        pred_dir=options.outputdir+'/'
-        ground_truth_dir=options.inputdir+'/'
+        pred_dir=os.path.join(options.inputdir,options.pred)+'/'
+        ground_truth_dir=os.path.join(options.inputdir,options.gt)+'/'
         img_len=len(os.listdir(pred_dir))
         x=np.zeros(img_len,dtype='float32')
         y=np.zeros(img_len,dtype='float32')
@@ -211,7 +216,7 @@ class Dice_coeff(ChrisApp):
     
         avg=total/nz_counter
         print ("Average accuracy :" + str(avg) )
-        fig.savefig(pred_dir+"/output.png")
+        fig.savefig(options.outputdir+"/output.png")
         
 
 
