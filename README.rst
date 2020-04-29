@@ -29,6 +29,8 @@ Synopsis
         [--version]                                                 \
         [--man]                                                     \
         [--meta]                                                    \
+        [--prediction <prediction dir>]                             \
+        [--ground_truth <ground truth dir>]                         \
         <inputDir>
         <outputDir> 
 
@@ -37,7 +39,7 @@ Description
 
 ``dice_coeff.py`` is a ChRIS-based application that...
 
-Agruments
+Arguments
 ---------
 
 .. code::
