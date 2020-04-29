@@ -55,6 +55,12 @@ Arguments
 
     [--meta]
     If specified, print plugin meta data.
+    
+    [--prediction <prediction dir>]
+    The directory where the predicted images are stored.
+    
+    [--ground_truth <ground truth dir>]
+    The directory where the ground truth images are stored.
 
 
 Run
@@ -75,13 +81,13 @@ and run with
 
 .. code:: bash
 
-    dice_coeff.py --man /tmp /tmp
+    dice_coeff.py --man --predition pred --ground_truth gt /tmp /tmp
 
 to get inline help. The app should also understand being called with only two positional arguments
 
 .. code:: bash
 
-    dice_coeff.py /some/input/directory /destination/directory
+    dice_coeff.py --prediction pred_dir_name --ground_truth grnd_trh_dir_name /some/input/directory /destination/directory
 
 
 Using ``docker run``
@@ -104,6 +110,8 @@ Thus, getting inline help is:
     docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
             fnndsc/pl-dice_coeff dice_coeff.py                        \
             --man                                                       \
+            --prediction pred                                           \
+            --ground_truth gt                                           \
             /incoming /outgoing
 
 Examples
