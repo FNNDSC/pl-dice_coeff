@@ -17,6 +17,7 @@ from skimage.io import imread
 import SimpleITK as sitk
 import math
 import matplotlib
+import re # required for alphanumeric sorting method
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
