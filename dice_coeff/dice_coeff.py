@@ -179,6 +179,14 @@ class Dice_coeff(ChrisApp):
         else:
             return result
 
+    # For some reasons, python default sorting doesn't perform alpha numeric sorting
+    # The below method performs alpha numeric sorting
+    # (abc12, abc123,abc20, abc203) => (abc12,abc20,abc123,abc203)
+    def sorted_alphanumeric(data):
+        convert=lambda text: int(text) if text.isdigit() else text.lower()
+        alphanum_key = lambda key :[convert(c) for c in re.split ('([0-9]+)',key)]
+        return sorted(data,key=alphanum_key)
+
     def plot_accuracy(self,options):
         pred_dir=os.path.join(options.inputdir,options.pred)+'/'
         ground_truth_dir=os.path.join(options.inputdir,options.gt)+'/'
@@ -190,11 +198,11 @@ class Dice_coeff(ChrisApp):
         avg_accuracy=0.0
 
         for i in range(252):
-            pred_files=sorted(os.listdir(pred_dir))
+            pred_files=self.sorted_alphanumeric(os.listdir(pred_dir))
             for pf in pred_files:
                 if not pf.endswith('.png'):
                     pred_files.remove(pf)
-            gt_files=sorted(os.listdir(ground_truth_dir))
+            gt_files=self.sorted_alphanumeric(os.listdir(ground_truth_dir))
             for gtf in gt_files:
                 if not gtf.endswith('.png'):
                     gt_files.remove(gtf)
