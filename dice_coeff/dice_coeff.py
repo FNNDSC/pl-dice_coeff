@@ -182,7 +182,7 @@ class Dice_coeff(ChrisApp):
     # For some reasons, python default sorting doesn't perform alpha numeric sorting
     # The below method performs alpha numeric sorting
     # (abc12, abc123,abc20, abc203) => (abc12,abc20,abc123,abc203)
-    def sorted_alphanumeric(data):
+    def sorted_alphanumeric(self,data):
         convert=lambda text: int(text) if text.isdigit() else text.lower()
         alphanum_key = lambda key :[convert(c) for c in re.split ('([0-9]+)',key)]
         return sorted(data,key=alphanum_key)
